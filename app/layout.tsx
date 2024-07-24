@@ -25,7 +25,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${ibmPlexSerif.variable}`}>
-        This is coming from main layout.tsx
         {children}
       </body>
     </html>
