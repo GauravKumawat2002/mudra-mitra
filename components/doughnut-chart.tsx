@@ -16,7 +16,7 @@ export default function DoughnutChart({ amount }: { amount: number }) {
     ],
   };
   return (
-    <div className="w-3/5 sm:w-full">
+    <div className="w-full">
       {}
       <Doughnut
         data={data}
