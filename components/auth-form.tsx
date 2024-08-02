@@ -2,113 +2,102 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Control, FieldPath, useForm } from "react-hook-form";
+import { Control, FieldPath, FieldValues, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import CustomFormField from "./custom-form-field";
+import CustomFormField, { SignInForm, SignUpForm } from "./custom-form-field";
 import { SignInFormSchema, SignUpFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
-interface SignFormFieldData {
-  control: Control<z.infer<typeof SignInFormSchema>>;
-  name: FieldPath<z.infer<typeof SignInFormSchema>>;
-  placeholder: string;
-  label: string;
-}
-interface SignUpFormFieldData {
-  control: Control<z.infer<typeof SignUpFormSchema>>;
-  name: FieldPath<z.infer<typeof SignUpFormSchema>>;
+type FormSchema = SignInForm | SignUpForm;
+interface FormFieldsData<FormSchema extends FieldValues> {
+  control: Control<FormSchema>;
+  name: FieldPath<FormSchema>;
   placeholder: string;
   label: string;
 }
 
 export default function AuthForm({ type }: AuthFormProps) {
-  const [user, setUser] = useState(null);
+  const [user] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // 1. Define your form.
-  const formSignIn = useForm<z.infer<typeof SignInFormSchema>>({
-    resolver: zodResolver(SignInFormSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      userName: "",
-    },
-  });
-  const formSignUp = useForm<z.infer<typeof SignUpFormSchema>>({
-    resolver: zodResolver(SignUpFormSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-    },
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(
+      type === "sign-in" ? SignInFormSchema : SignUpFormSchema,
+    ),
+    defaultValues:
+      type === "sign-in"
+        ? { userName: "", email: "", password: "" }
+        : { firstName: "", lastName: "", email: "", password: "" },
   });
 
-  const SignInFormField: SignFormFieldData[] = [
-    {
-      control: formSignIn.control,
-      name: "email",
-      placeholder: "Email here",
-      label: "Email",
-    },
-    {
-      control: formSignIn.control,
-      name: "password",
-      placeholder: "Password here",
-      label: "Password",
-    },
-    {
-      control: formSignIn.control,
-      name: "userName",
-      placeholder: "Username here",
-      label: "User Name",
-    },
-  ];
-  const SignUpFormField: SignUpFormFieldData[] = [
-    {
-      control: formSignUp.control,
-      name: "firstName",
-      placeholder: "First Name here",
-      label: "First Name",
-    },
-    {
-      control: formSignUp.control,
-      name: "lastName",
-      placeholder: "Last Name here",
-      label: "Last Name",
-    },
-    {
-      control: formSignUp.control,
-      name: "email",
-      placeholder: "Email here",
-      label: "Email",
-    },
-    {
-      control: formSignUp.control,
-      name: "password",
-      placeholder: "Password here",
-      label: "Password",
-    },
-  ];
+  const FormFields: FormFieldsData<SignInForm | SignUpForm>[] =
+    type === "sign-in"
+      ? [
+          {
+            control: form.control,
+            name: "email",
+            placeholder: "Email here",
+            label: "Email",
+          },
+          {
+            control: form.control,
+            name: "password",
+            placeholder: "Password here",
+            label: "Password",
+          },
+          {
+            control: form.control,
+            name: "userName",
+            placeholder: "Username here",
+            label: "User Name",
+          },
+        ]
+      : [
+          {
+            control: form.control,
+            name: "firstName",
+            placeholder: "First Name here",
+            label: "First Name",
+          },
+          {
+            control: form.control,
+            name: "lastName",
+            placeholder: "Last Name here",
+            label: "Last Name",
+          },
+          {
+            control: form.control,
+            name: "email",
+            placeholder: "Email here",
+            label: "Email",
+          },
+          {
+            control: form.control,
+            name: "password",
+            placeholder: "Password here",
+            label: "Password",
+          },
+          {
+            control: form.control,
+            name: "userName",
+            placeholder: "Username here",
+            label: "User Name",
+          },
+        ];
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof SignInFormSchema>) {
+  function onSubmit(values: FormSchema) {
     setLoading(true);
     console.log(values);
     setLoading(false);
   }
-  function onSubmit1(values: z.infer<typeof SignUpFormSchema>) {
-    setLoading(true);
-    console.log(values);
-    setLoading(false);
-  }
+
   return (
     <section className="auth-form">
       <header className="flex flex-col gap-5 md:gap-8">
-        {" "}
         <Link
           href={"/"}
           className="mb-4 flex cursor-pointer items-center gap-1"
@@ -135,17 +124,18 @@ export default function AuthForm({ type }: AuthFormProps) {
           </h1>
         </div>
       </header>
+
       {user ? (
         <div className="flex flex-col gap-4">{/* Plaid Link */}</div>
       ) : (
         <>
-          {type === "sign-in" ? (
-            <Form {...formSignIn}>
+          <Form {...form}>
+            {type === "sign-in" ? (
               <form
-                onSubmit={formSignIn.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-4"
               >
-                {SignInFormField.map((field) => (
+                {FormFields.map((field) => (
                   <CustomFormField
                     key={field.name}
                     control={field.control}
@@ -168,14 +158,12 @@ export default function AuthForm({ type }: AuthFormProps) {
                   )}
                 </Button>
               </form>
-            </Form>
-          ) : (
-            <Form {...formSignUp}>
+            ) : (
               <form
-                onSubmit={formSignUp.handleSubmit(onSubmit1)}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-4"
               >
-                {SignUpFormField.map((field) => (
+                {FormFields.map((field) => (
                   <CustomFormField
                     key={field.name}
                     control={field.control}
@@ -196,8 +184,8 @@ export default function AuthForm({ type }: AuthFormProps) {
                   )}
                 </Button>
               </form>
-            </Form>
-          )}
+            )}
+          </Form>
 
           <footer className="flex justify-center gap-1">
             <p className="text-14 font-normal text-gray-600">
