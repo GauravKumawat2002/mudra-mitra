@@ -196,7 +196,7 @@ export const getTransactionStatus = (date: Date) => {
 
   return date > twoDaysAgo ? "Processing" : "Success";
 };
-export const FormSchema = z.object({
+export const SignInFormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
@@ -205,12 +205,20 @@ export const FormSchema = z.object({
     .string()
     .min(4, { message: "Username must be 4 characters in length" }),
 });
-
-// firstName: z
-//   .string()
-//   .min(2, { message: "First Name must be 2 characters in length" })
-//   .max(20, { message: "First Name must be 20 characters in length" }),
-// lastName: z
-//   .string()
-//   .min(2, { message: "Last Name must be 2 characters in length" })
-//   .max(20, { message: "Last Name must be 20 characters in length" }),
+export const SignUpFormSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, { message: "First Name must be 2 characters in length" })
+    .max(20, { message: "First Name must be 20 characters in length" }),
+  lastName: z
+    .string()
+    .min(2, { message: "Last Name must be 2 characters in length" })
+    .max(20, { message: "Last Name must be 20 characters in length" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be 8 characters in length" }),
+  userName: z
+    .string()
+    .min(4, { message: "Username must be 4 characters in length" }),
+});

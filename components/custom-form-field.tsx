@@ -1,20 +1,23 @@
 import { Input } from "./ui/input";
 import React from "react";
 import { FormField, FormLabel, FormControl, FormMessage } from "./ui/form";
-import { Control, FieldPath } from "react-hook-form";
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 import { z } from "zod";
-import { FormSchema } from "@/lib/utils";
-export default function CustomFormField({
-  control,
-  name,
-  placeholder,
-  label,
-}: {
-  control: Control<z.infer<typeof FormSchema>>;
-  name: FieldPath<z.infer<typeof FormSchema>>;
+import { SignInFormSchema, SignUpFormSchema } from "@/lib/utils";
+
+export type SignInForm = z.infer<typeof SignInFormSchema>;
+export type SignUpForm = z.infer<typeof SignUpFormSchema>;
+
+interface CustomFormFieldProps<FormSchema extends FieldValues> {
+  control: Control<FormSchema>;
+  name: FieldPath<FormSchema>;
   placeholder: string;
   label: string;
-}) {
+}
+
+export default function CustomFormField<
+  FormSchema extends SignInForm | SignUpForm,
+>({ control, name, placeholder, label }: CustomFormFieldProps<FormSchema>) {
   return (
     <div>
       <FormField
