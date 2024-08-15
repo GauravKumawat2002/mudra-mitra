@@ -38,52 +38,52 @@ export default function AuthForm({ type }: AuthFormProps) {
       ? [
           {
             control: form.control,
+            name: "userName",
+            placeholder: "Username ",
+            label: "User Name",
+          },
+          {
+            control: form.control,
             name: "email",
-            placeholder: "Email here",
+            placeholder: "Email ",
             label: "Email",
           },
           {
             control: form.control,
             name: "password",
-            placeholder: "Password here",
+            placeholder: "Password ",
             label: "Password",
-          },
-          {
-            control: form.control,
-            name: "userName",
-            placeholder: "Username here",
-            label: "User Name",
           },
         ]
       : [
           {
             control: form.control,
             name: "firstName",
-            placeholder: "First Name here",
+            placeholder: "First Name ",
             label: "First Name",
           },
           {
             control: form.control,
             name: "lastName",
-            placeholder: "Last Name here",
+            placeholder: "Last Name ",
             label: "Last Name",
           },
           {
             control: form.control,
             name: "email",
-            placeholder: "Email here",
+            placeholder: "Email ",
             label: "Email",
           },
           {
             control: form.control,
             name: "password",
-            placeholder: "Password here",
+            placeholder: "Password ",
             label: "Password",
           },
           {
             control: form.control,
             name: "userName",
-            placeholder: "Username here",
+            placeholder: "Username ",
             label: "User Name",
           },
         ];
